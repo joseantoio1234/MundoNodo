@@ -150,7 +150,7 @@
         </footer>
 
 <script>
-    // 1. Definir la función GLOBALMENTE para asegurar visibilidad desde el onclick
+    // 1. Definir la función para asegurar visibilidad desde el onclick
     function togglePass(id, icon) {
         const input = document.getElementById(id);
         if (input) {
@@ -217,7 +217,7 @@
             });
         }
 
-        // --- 2. AUTO-CÁLCULO DE DNI (NUEVO) ---
+        // --- 2. AUTO-CÁLCULO DE DNI ---
         if (dniInput) {
             dniInput.addEventListener('input', function () {
                 let valor = this.value.trim();
@@ -254,7 +254,7 @@
             });
         }
 
-        // --- 3. RESTRICCIONES DE ENTRADA (CP Y TEL) ---
+        // --- 3. RESTRICCIONES DE ENTRADA ---
         if (cpInput) {
             cpInput.addEventListener('input', function() {
                 this.value = this.value.replace(/[^0-9]/g, '').substring(0, 5);

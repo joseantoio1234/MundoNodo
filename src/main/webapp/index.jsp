@@ -348,7 +348,7 @@
             });
     }
 
-    // --- FUNCIÓN: AÑADIR AL CARRITO AJAX (VERSION FINAL) ---
+    // --- FUNCIÓN: AÑADIR AL CARRITO AJAX  ---
     function añadirAlCarritoAjax(idProducto) {
         const url = "${pageContext.request.contextPath}/AnadirCarrito?id=" + idProducto;
 
@@ -377,7 +377,6 @@
                     timerProgressBar: true
                 });
 
-                // ACTUALIZACIÓN DEL CONTADOR POR ID (Clave para que funcione)
                 const cartBadge = document.getElementById('contador-carrito-ajax');
                 
                 if (cartBadge && nuevaCantidad !== undefined) {
@@ -416,15 +415,14 @@
             const partes = data.split("|");
             const nuevaCantidad = partes[1];
 
-            // --- NUEVO: CERRAR EL MODAL AUTOMÁTICAMENTE ---
-            // Buscamos cualquier modal que esté abierto y lo cerramos
+            // --- CERRAR EL MODAL AUTOMÁTICAMENTE ---
             const modales = document.querySelectorAll('.modal-overlay');
             modales.forEach(modal => {
                 modal.style.display = "none";
             });
-            document.body.style.overflow = "auto"; // Devolvemos el scroll a la página
+            document.body.style.overflow = "auto"; 
 
-            // Notificación visual Toast
+            // Notificación visual
             Swal.fire({
                 icon: 'success',
                 title: '¡Añadido!',

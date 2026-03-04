@@ -7,11 +7,26 @@ import javax.sql.DataSource;
 import mundonodo.model.dto.Pedido;
 import mundonodo.model.dto.Producto;
 import mundonodo.model.dto.ItemCarrito;
-import mundonodo.model.mysql.Conexion; 
+import mundonodo.model.mysql.Conexion;
 
+/**
+ * Clase Data Access Object (DAO) que gestiona la persistencia de los pedidos en MundoNodo.
+ * Implementa una lógica de transacciones complejas para garantizar la integridad referencial
+ * entre las tablas de pedidos y sus correspondientes líneas de detalle.
+ * * @author Jose Antonio
+ * @version 1.0
+ */
 public class PedidoDAO {
 
-  
+    /**
+     * Inserta un pedido completo en la base de datos de forma atómica.
+     * Utiliza una transacción para insertar primero la cabecera (pedidos) y luego
+     * el detalle (lineaspedidos). Si alguna operación falla, se realiza un rollback.
+     * * @param ds El {@link DataSource} para obtener la conexión.
+     * @param pedido El objeto {@link Pedido} con la información de la cabecera.
+     * @param carrito La lista de {@link ItemCarrito} que representan las líneas del pedido.
+     * @return El ID del pedido generado por la base de datos, o -1 si la operación falló.
+     */
     public int insertarPedidoCompleto(DataSource ds, Pedido pedido, List<ItemCarrito> carrito) {
         String sqlPedido = "INSERT INTO pedidos (idusuario, fecha, total, estado) VALUES (?, NOW(), ?, 'PAGADO')";
         String sqlLinea = "INSERT INTO lineaspedidos (idpedido, idproducto, cantidad) VALUES (?, ?, ?)";
@@ -29,6 +44,7 @@ public class PedidoDAO {
                 psP.setDouble(2, pedido.getTotal());
                 psP.executeUpdate();
 
+                // Recuperamos el ID generado automáticamente 
                 try (ResultSet rs = psP.getGeneratedKeys()) {
                     if (rs.next()) {
                         idGenerado = rs.getInt(1);
@@ -48,14 +64,14 @@ public class PedidoDAO {
                     psL.executeBatch(); 
                 }
                 con.commit(); 
-                System.out.println("Pedido " + idGenerado + " guardado con éxito.");
+                System.out.println(">>> Pedido " + idGenerado + " guardado con éxito.");
             }
 
         } catch (SQLException e) {
             if (con != null) {
                 try { 
                     con.rollback(); 
-                    System.err.println("Transacción deshecha (Rollback) debido a: " + e.getMessage());
+                    System.err.println(">>> Transacción deshecha (Rollback) debido a: " + e.getMessage());
                 } catch (SQLException ex) { ex.printStackTrace(); }
             }
             idGenerado = -1;
@@ -70,7 +86,13 @@ public class PedidoDAO {
         return idGenerado;
     }
 
-   
+    /**
+     * Recupera el historial de pedidos de un usuario específico.
+     * Los resultados se devuelven ordenados por fecha de forma descendente.
+     * * @param ds El {@link DataSource} para la conexión.
+     * @param idUsuario El identificador único del usuario.
+     * @return Una {@link List} de objetos {@link Pedido} pertenecientes al usuario.
+     */
     public List<Pedido> listarPedidosPorUsuario(DataSource ds, int idUsuario) {
         List<Pedido> lista = new ArrayList<>();
         String sql = "SELECT idpedido, idusuario, fecha, total, estado FROM pedidos WHERE idusuario = ? ORDER BY fecha DESC";
@@ -96,7 +118,13 @@ public class PedidoDAO {
         return lista;
     }
 
-
+    /**
+     * Obtiene el desglose detallado de productos de un pedido concreto.
+     * Realiza un JOIN entre las líneas de pedido y la tabla de productos para obtener la info comercial.
+     * * @param ds El {@link DataSource} para la conexión.
+     * @param idPedido El identificador del pedido a consultar.
+     * @return Una lista de {@link ItemCarrito} con los productos y cantidades del pedido.
+     */
     public List<ItemCarrito> listarDetallesPorPedido(DataSource ds, int idPedido) {
         List<ItemCarrito> detalles = new ArrayList<>();
         String sql = "SELECT p.nombre, p.precio, p.imagen, lp.cantidad " +

@@ -8,13 +8,22 @@ import mundonodo.model.dto.ItemCarrito;
 import mundonodo.model.dto.Producto;
 
 /**
- * Utilidad para transformar la cesta de la compra entre objetos Java y texto plano (Cookies).
+ * Clase de utilidad encargada de la persistencia del carrito de compras.
+ * Proporciona métodos para transformar la lista de objetos {@link ItemCarrito} en 
+ * cadenas de texto (Serialización) y viceversa (Deserialización), permitiendo 
+ * almacenar la cesta en las cookies del cliente.
+ * * @author Jose Antonio
+ * @version 1.0
  */
 public class CestaUtils {
 
     /**
-     * Convierte la lista de productos en un texto para la Cookie.
-     * Formato resultante: id1_cant1-id2_cant2 (Ejemplo: "14_2-5_1")
+     * Transforma la lista de items del carrito en una cadena de texto compacta.
+     * El formato resultante es: "ID1_CANT1-ID2_CANT2-IDn_CANTn".
+     * Ejemplo: "14_2-5_1" (Dos unidades del producto 14 y una del producto 5).
+     * * @param carrito Lista de objetos {@link ItemCarrito} a procesar.
+     * @return {@link String} formateado para su almacenamiento en cookies. 
+     * Retorna una cadena vacía si el carrito es nulo o no contiene elementos.
      */
     public static String serializarCesta(List<ItemCarrito> carrito) {
         if (carrito == null || carrito.isEmpty()) {
@@ -35,13 +44,17 @@ public class CestaUtils {
         // Si el StringBuilder está vacío tras el bucle, retornamos cadena vacía
         if (sb.length() == 0) return "";
 
-        // Quitamos el último guion sobrante
+        // Quitamos el último guion sobrante para que el formato sea limpio
         return sb.substring(0, sb.length() - 1);
     }
 
     /**
-     * Convierte el texto recuperado de la Cookie de nuevo en una lista de objetos ItemCarrito.
-     * Requiere el DataSource para buscar la información actualizada de los productos en la BD.
+     * Reconstruye la lista de objetos del carrito a partir de una cadena de texto.
+     * Realiza consultas a la base de datos para recuperar la información actualizada 
+     * (precio, imagen, stock) de cada producto basándose en su ID.
+     * * @param datos Cadena de texto recuperada de la cookie.
+     * @param ds El {@link DataSource} necesario para que el DAO realice las consultas.
+     * @return {@link List} de {@link ItemCarrito} poblada con datos reales de la BD.
      */
     public static List<ItemCarrito> deserializarCesta(String datos, DataSource ds) {
         List<ItemCarrito> carrito = new ArrayList<>();
@@ -51,14 +64,15 @@ public class CestaUtils {
             return carrito;
         }
 
+        // Instanciamos el DAO de productos para recuperar la info comercial
         ProductoDao pDao = new ProductoDao();
         
         try {
-            // 1. Separamos los bloques de productos (usando el guion '-')
+            // 1. Separamos los bloques de productos (usando el delimitador de item '-')
             String[] items = datos.split("-"); 
 
             for (String itemStr : items) {
-                // 2. Separamos el ID del producto y su cantidad (usando el guion bajo '_')
+                // 2. Separamos el ID del producto y su cantidad (usando el delimitador de campo '_')
                 String[] partes = itemStr.split("_"); 
                 
                 if (partes.length == 2) {
@@ -67,19 +81,20 @@ public class CestaUtils {
                         int cant = Integer.parseInt(partes[1]);
                         
                         // 3. Buscamos el producto en la BD para tener los datos reales (precio, imagen, nombre)
+                        // Esto garantiza que si el precio cambió mientras el usuario estaba ausente, el carrito se actualice.
                         Producto p = pDao.obtenerPorId(ds, id);
                         
-                        // Solo añadimos si el producto aún existe en nuestro catálogo
+                        // Solo añadimos si el producto aún existe en nuestro catálogo (integridad referencial)
                         if (p != null) {
                             carrito.add(new ItemCarrito(p, cant));
                         }
                     } catch (NumberFormatException nfe) {
-                        System.err.println("Error de formato en segmento de cookie: " + itemStr);
+                        System.err.println(">>> Error de formato en segmento de cookie: " + itemStr);
                     }
                 }
             }
         } catch (Exception e) {
-            System.err.println("Error general al deserializar la cesta: " + e.getMessage());
+            System.err.println(">>> Error general al deserializar la cesta: " + e.getMessage());
         }
         
         return carrito;

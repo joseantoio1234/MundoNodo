@@ -1,5 +1,5 @@
 /* =========================================
-    1. VARIABLES Y RESET
+    VARIABLES Y RESET
     ========================================= */
 :root {
     --primary: #e67e22; /* El naranja característico */
@@ -31,7 +31,7 @@ body {
 }
 
 /* =========================================
-    2. HEADER (NARANJA Y PROFESIONAL)
+    HEADER 
     ========================================= */
 .main-header {
     background: var(--dark);
@@ -105,14 +105,14 @@ body {
 }
 
 .auth-btn.logout:hover {
-    background-color: #c0392b !important; /* Un rojo más oscuro al pasar el ratón */
+    background-color: #c0392b !important; 
     transform: translateY(-2px);
     transition: all 0.3s;
 }
 
 .welcome-text i {
     margin-right: 5px;
-    color: #e67e22; /* El naranja de tu marca */
+    color: #e67e22;
 }
 
 .auth-btn.logout:hover {
@@ -147,11 +147,11 @@ body {
 }
 
 /* =========================================
-    3. HERO SECTION (BANNER)
+    HERO SECTION 
     ========================================= */
 .hero-section {
     position: relative;
-    height: 400px; /* Altura fija para que no sea excesivamente grande */
+    height: 400px; 
     display: flex;
     align-items: center;
     justify-content: center;
@@ -162,15 +162,15 @@ body {
     background-image: linear-gradient(rgba(44, 62, 80, 0.7), rgba(44, 62, 80, 0.7)), 
                       url('https://images.unsplash.com/photo-1587202372775-e229f172b9d7?q=80&w=2070&auto=format&fit=crop');
     
-    background-size: cover;      /* Evita la distorsión */
-    background-position: center; /* Centra la imagen siempre */
+    background-size: cover;     
+    background-position: center; 
     background-repeat: no-repeat;
     margin-bottom: 40px;
 }
 .hero-content h1 {
     font-size: 2.5rem;
     margin-bottom: 10px;
-    text-shadow: 2px 2px 10px rgba(0,0,0,0.5); /* Sombra para resaltar el texto */
+    text-shadow: 2px 2px 10px rgba(0,0,0,0.5);
 }
 
 .hero-content p {
@@ -180,7 +180,9 @@ body {
     opacity: 0.9;
 }
 
-/*Filtro de categorias */
+/* =========================================
+    Filtro de Categorias
+    ========================================= */
 /* Layout General */
 .shop-container {
     display: flex;
@@ -192,7 +194,7 @@ body {
 
 /* BARRA LATERAL */
 .filter-sidebar {
-    flex: 0 0 280px; /* Ancho fijo para el filtro */
+    flex: 0 0 280px; 
     background: #fff;
     border-radius: 12px;
     padding: 25px;
@@ -204,7 +206,7 @@ body {
 .sidebar-title {
     color: #2c3e50;
     font-size: 1.4rem;
-    border-bottom: 2px solid #e67e22; /* Línea naranja MundoNodo */
+    border-bottom: 2px solid #e67e22;
     padding-bottom: 10px;
     margin-bottom: 20px;
 }
@@ -271,11 +273,11 @@ body {
 
 .product-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr); /* 4 por fila al tener sidebar */
+    grid-template-columns: repeat(4, 1fr); 
     gap: 20px;
 }
 /* =========================================
-    4. PRODUCT GRID (6 COLUMNAS)
+    PRODUCT GRID (6 COLUMNAS)
     ========================================= */
 .product-section h2 {
     margin: 40px 0 20px;
@@ -285,14 +287,13 @@ body {
 
 .product-grid {
     display: grid;
-    /* Forzamos 5 columnas iguales */
     grid-template-columns: repeat(5, 1fr); 
-    gap: 15px; /* Espacio reducido entre tarjetas */
+    gap: 15px; 
     padding: 20px 0;
 }
 
 /* =========================================
-    5. CARDS (ALTURA AJUSTADA PARA NOMBRES)
+    CARDS 
     ========================================= */
 /* Contenedor principal para 5 columnas a la derecha del sidebar */
 .product-grid-compact {
@@ -310,10 +311,10 @@ body {
     padding: 10px;
     border: 1px solid #eee;
     display: flex;
-    flex-direction: column; /* Cambiamos a vertical para que quepan 5 bien */
+    flex-direction: column; 
     align-items: center;
     justify-content: space-between;
-    height: 220px; /* Altura más bajita como pediste */
+    height: 220px; 
     transition: var(--transition);
     cursor: pointer;
 }
@@ -324,10 +325,10 @@ body {
     border-color: var(--primary);
 }
 
-/* Imagen más pequeña para el formato de 5 columnas */
+
 .img-container-wide {
     width: 100%;
-    height: 90px; /* Reducimos la altura de la imagen */
+    height: 90px; 
     display: flex;
     align-items: center;
     justify-content: center;
@@ -340,14 +341,14 @@ body {
     object-fit: contain;
 }
 
-/* Ajuste de textos para que no ocupen demasiado espacio */
+
 .card-content-wide {
     text-align: center;
     width: 100%;
 }
 
 .card-content-wide h3 {
-    font-size: 0.8rem; /* Fuente más pequeña para que quepan nombres largos */
+    font-size: 0.8rem; 
     margin-bottom: 4px;
     color: var(--dark);
     line-height: 1.1;
@@ -361,19 +362,18 @@ body {
     font-weight: 800;
 }
 /* =========================================
-    6. FOOTER PROFESIONAL (EMPRESA REAL)
+    FOOTER
     ========================================= */
 .main-footer {
-    background: var(--dark); /* Gris casi negro */
+    background: var(--dark); 
     color: #e0e0e0;
     padding: 70px 0 30px;
     margin-top: 80px;
-    border-top: 4px solid var(--primary); /* Línea naranja distintiva */
+    border-top: 4px solid var(--primary); 
 }
 
 .footer-grid {
     display: grid;
-    /* 4 columnas en pantallas grandes */
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: 40px;
 }
@@ -386,7 +386,6 @@ body {
     padding-bottom: 10px;
 }
 
-/* Línea pequeña naranja debajo de los títulos del footer */
 .footer-section h3::after {
     content: '';
     position: absolute;
@@ -420,7 +419,7 @@ body {
 
 .footer-section ul li a:hover {
     color: var(--primary);
-    padding-left: 8px; /* Pequeño efecto de desplazamiento */
+    padding-left: 8px; 
 }
 
 .footer-logo {
@@ -471,7 +470,6 @@ body {
     color: #666;
 }
 
-/* AJUSTE FINAL DE CARDS PARA MANTENER 6 COLUMNAS */
 .product-grid {
     display: grid;
     grid-template-columns: repeat(6, 1fr); 
@@ -479,7 +477,7 @@ body {
 }
 
 .card {
-    min-height: 430px; /* Suficiente para nombres técnicos largos */
+    min-height: 430px; 
     background: white;
     padding: 20px;
     border-radius: 12px;
@@ -491,11 +489,11 @@ body {
     box-shadow: var(--shadow-hover);
 }
 /* =========================================
-    7. VISTA DEL CARRITO (SHOPPING CART)
+     VISTA DEL CARRITO 
     ========================================= */
 .cart-wrapper {
     display: grid;
-    grid-template-columns: 2fr 1fr; /* Columna de productos más ancha */
+    grid-template-columns: 2fr 1fr; 
     gap: 30px;
     margin-top: 30px;
 }
@@ -547,7 +545,7 @@ body {
     box-shadow: var(--shadow-card);
     height: fit-content;
     position: sticky;
-    top: 100px; /* Se queda fijo al hacer scroll */
+    top: 100px; 
 }
 
 .summary-item {
@@ -585,7 +583,9 @@ body {
     background: var(--primary);
 }
 
-/*Carrito*/
+/* =========================================
+     CARRITO 
+    ========================================= */
 /* Configuración de la página */
 body {
     background-color: #f4f7f6;
@@ -606,7 +606,7 @@ body {
     padding-bottom: 5px;
 }
 
-/* Tarjeta de producto horizontal */
+/* Tarjeta de producto */
 .cart-item-card {
     display: flex; 
     flex-direction: row; 
@@ -641,7 +641,6 @@ body {
     margin-top: 5px;
 }
 
-/* Controles de cantidad */
 .cart-controls {
     display: flex; 
     align-items: center; 
@@ -664,7 +663,6 @@ body {
     font-weight: bold;
 }
 
-/* Botón deshabilitado cuando hay solo 1 unidad */
 .qty-btn-disabled {
     padding: 5px 12px;
     background: #f9f9f9;
@@ -722,10 +720,11 @@ body {
     border: none;
 }
 
-/* Registro y Autenticación */
-/* --- ESTILOS VISTA REGISTRO --- */
+/* =========================================
+     REGISTRO 
+    ========================================= */
 
-/* Header Mini (Estilo fino) */
+
 .header-mini {
     background-color: #2c3e50;
     padding: 8px 40px;
@@ -742,7 +741,7 @@ body {
 }
 
 .logo-img-mini {
-    height: 30px; /* Tamaño reducido similar al footer */
+    height: 30px; 
     width: auto;
 }
 
@@ -753,7 +752,6 @@ body {
     font-weight: bold;
 }
 
-/* Botón Naranja del Header */
 .btn-nav-orange-mini {
     background-color: #e67e22;
     color: white;
@@ -769,7 +767,7 @@ body {
     background-color: #d35400;
 }
 
-/* Cuerpo y Tarjeta Central */
+
 .auth-page {
     background-color: #f4f7f6;
     display: flex;
@@ -778,29 +776,24 @@ body {
     margin: 0;
 }
 
-/* Contenedor principal para ocupar todo el ancho */
-/* Ajuste del contenedor principal */
-/* ==========================================================================
-   ESTILOS DE REGISTRO MUNDONODO (FULL WIDTH - SIN SCROLL)
-   ========================================================================== */
 
 /* Contenedor principal: Ocupa todo el ancho y centra el contenido */
 .auth-main {
     display: flex;
     justify-content: center;
-    align-items: center; /* Centrado vertical para evitar scroll */
+    align-items: center; 
     width: 100%;
-    min-height: calc(100vh - 120px); /* Ajuste según altura de tu header/footer */
+    min-height: calc(100vh - 120px); 
     padding: 20px;
     box-sizing: border-box;
     background-color: #f8f9fa;
 }
 
-/* Tarjeta de registro: Forzamos el ancho máximo */
+
 .auth-card {
     background: white;
-    width: 98% !important;        /* Ocupa el 98% de la pantalla */
-    max-width: 1600px !important; /* Límite para pantallas ultra-anchas */
+    width: 98% !important;        
+    max-width: 1600px !important; 
     padding: 30px 40px;
     border-radius: 15px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.08);
@@ -821,18 +814,18 @@ body {
     font-size: 0.9rem;
 }
 
-/* SISTEMA DE REJILLA (4 COLUMNAS) */
+
 .registration-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr); /* 4 columnas iguales */
+    grid-template-columns: repeat(4, 1fr); 
     gap: 15px 25px; 
     align-items: start;
     margin-bottom: 25px;
 }
 
-/* Títulos de sección dentro del grid (Datos Personales, Envío...) */
+
 .section-title-horizontal {
-    grid-column: 1 / -1; /* Ocupa toda la fila de lado a lado */
+    grid-column: 1 / -1; 
     text-align: left;
     color: #e67e22;
     font-weight: bold;
@@ -874,7 +867,7 @@ body {
     outline: none;
 }
 
-/* Modificador para que un campo ocupe 2 columnas (Email, Dirección) */
+
 .col-span-2 {
     grid-column: span 2;
 }
@@ -913,7 +906,7 @@ body {
     background-color: #2c3e50;
     color: white;
     width: 100%;
-    max-width: 350px; /* El botón no se estira tanto para no quedar feo */
+    max-width: 350px; 
     padding: 14px;
     border: none;
     border-radius: 50px;
@@ -947,14 +940,14 @@ body {
 }
 
 .footer-regist {
-    background-color: #2c3e50; /* Azul marino institucional */
-    color: #ffffff;            /* Texto blanco */
-    width: 100%;               /* Asegura el ancho total */
-    padding: 20px 0;           /* Espaciado vertical */
-    text-align: center;        /* Centrado horizontal del texto */
-    font-size: 0.85rem;        /* Tamaño de fuente profesional */
-    border-top: 3px solid #e67e22; /* Línea naranja de acento MundoNodo */
-    margin-top: auto;          /* Empuja el footer al fondo en layouts flex */
+    background-color: #2c3e50; 
+    color: #ffffff;            
+    width: 100%;               
+    padding: 20px 0;           
+    text-align: center;        
+    font-size: 0.85rem;        
+    border-top: 3px solid #e67e22; 
+    margin-top: auto;          
 }
 
 .footer-regist p {
@@ -969,13 +962,13 @@ input {
 /* RESPONSIVIDAD */
 @media (max-width: 1300px) {
     .registration-grid {
-        grid-template-columns: repeat(2, 1fr); /* Bajamos a 2 columnas */
+        grid-template-columns: repeat(2, 1fr); 
     }
 }
 
 @media (max-width: 768px) {
     .registration-grid {
-        grid-template-columns: 1fr; /* 1 columna en móvil */
+        grid-template-columns: 1fr; 
     }
     .col-span-2 {
         grid-column: span 1;
@@ -985,21 +978,17 @@ input {
     }
 }
 
-/* ==========================================================================
-   ESTILOS EXCLUSIVOS PARA LOGIN - MUNDONODO
-   ========================================================================== */
-
 /* Contenedor principal: Centrado total en pantalla */
 .auth-main {
     display: flex;
-    flex-direction: column; /* Apila el H1 sobre la Card */
-    justify-content: center; /* Centrado vertical */
-    align-items: center;     /* Centrado horizontal */
+    flex-direction: column; 
+    justify-content: center; 
+    align-items: center;     
     width: 100%;
-    min-height: calc(100vh - 120px); /* Ajuste para descontar header/footer */
+    min-height: calc(100vh - 120px); 
     padding: 20px;
     box-sizing: border-box;
-    background-color: #f8f9fa; /* Color de fondo suave */
+    background-color: #f8f9fa; 
 }
 
 /* Título de bienvenida encima del formulario */
@@ -1015,7 +1004,7 @@ input {
 .auth-card {
     background: white;
     width: 100%;
-    max-width: 450px; /* El login se ve mejor estrecho */
+    max-width: 450px; 
     padding: 40px;
     border-radius: 15px;
     box-shadow: 0 10px 25px rgba(0,0,0,0.08);
@@ -1023,7 +1012,6 @@ input {
     box-sizing: border-box;
 }
 
-/* Badge decorativo */
 .auth-badge {
     display: inline-block;
     padding: 6px 20px;
@@ -1117,33 +1105,35 @@ input {
     text-decoration: underline;
 }
 .footer-auth {
-    background-color: #2c3e50; /* Azul Marino */
-    color: #ffffff;            /* Letras blancas */
-    width: 100%;               /* Todo el ancho */
-    padding: 20px 0;           /* Espaciado interno arriba y abajo */
-    text-align: center;        /* Centrado de letras horizontal */
-    font-size: 0.9rem;         /* Tamaño de letra adecuado */
-    border-top: 3px solid #e67e22; /* Línea naranja opcional para separar del blanco */
-    margin-top: auto;          /* Empuja el footer hacia abajo si el contenido es poco */
+    background-color: #2c3e50; 
+    color: #ffffff;            
+    width: 100%;               
+    padding: 20px 0;          
+    text-align: center;       
+    font-size: 0.9rem;         
+    border-top: 3px solid #e67e22; 
+    margin-top: auto;          
 }
 
 .footer-auth p {
-    margin: 0;                 /* Elimina margenes por defecto del párrafo */
-    letter-spacing: 0.5px;     /* Mejora la legibilidad */
+    margin: 0;                 
+    letter-spacing: 0.5px;     
 }
 
-/*Modales*/
-/* Superposición del Modal */
+/* =========================================
+    MODALES
+    ========================================= */
+
 .modal-overlay {
     display: none; 
     position: fixed;
-    z-index: 2000; /* Asegura que esté por encima de todo el contenido */
+    z-index: 2000; 
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(4px); /* Efecto de desenfoque de fondo */
+    backdrop-filter: blur(4px); 
 }
 
 /* Caja blanca central del modal */
@@ -1152,7 +1142,7 @@ input {
     position: relative;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%); /* Centrado absoluto en pantalla */
+    transform: translate(-50%, -50%); 
     width: 90%;
     max-width: 850px;
     padding: 40px;
@@ -1204,7 +1194,7 @@ input {
     color: #666;
     line-height: 1.6;
     margin-bottom: 30px;
-    font-size: 0.95rem; /* Fuente ligeramente más pequeña para mejor ajuste */
+    font-size: 0.95rem;
 }
 
 /* Sección inferior: Precio y Botón */
@@ -1222,13 +1212,13 @@ input {
     font-weight: bold;
 }
 
-/* --- ACTUALIZACIÓN: Botón de añadir más pequeño y compacto --- */
+/*  Botón de añadir  */
 .modal-footer-price .btn-submit-auth {
-    width: auto;               /* No ocupa todo el ancho disponible */
-    padding: 10px 25px;         /* Espaciado interno reducido */
-    font-size: 0.95rem;        /* Tamaño de fuente ajustado */
-    min-width: 180px;          /* Ancho mínimo para consistencia visual */
-    display: inline-flex;      /* Permite alinear icono y texto */
+    width: auto;              
+    padding: 10px 25px;         
+    font-size: 0.95rem;      
+    min-width: 180px;          
+    display: inline-flex;      
     align-items: center;
     justify-content: center;
     gap: 10px;
@@ -1258,12 +1248,13 @@ input {
 .product-card-clickable:hover {
     transform: scale(1.02);
     box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-    border: 1px solid #e67e22; /* Borde naranja al pasar el ratón */
+    border: 1px solid #e67e22; 
 }
 
 
-
-/*filtros*/
+/* =========================================
+    FILTROS
+    ========================================= */
 /* Contenedor Principal del Aside */
 .sidebar-filtros {
     background: #ffffff;
@@ -1273,7 +1264,7 @@ input {
     border: 1px solid #edf2f7;
     height: fit-content;
     position: sticky;
-    top: 20px; /* Se queda fijo al hacer scroll */
+    top: 20px; 
 }
 
 .sidebar-filtros h3 {
@@ -1286,7 +1277,7 @@ input {
 }
 
 .sidebar-filtros h3 i {
-    color: #2ecc71; /* El verde característico */
+    color: #2ecc71; 
 }
 
 .sidebar-filtros hr {
@@ -1304,18 +1295,18 @@ input {
     margin-bottom: 15px;
 }
 
-/* Buscador de Categorías Estilizado */
+
 /* Contenedor con Scroll para las 30 categorías */
 .scroll-categorias {
-    max-height: 250px; /* Altura fija para no romper el diseño */
-    overflow-y: auto;  /* Activa el scroll vertical */
+    max-height: 250px; 
+    overflow-y: auto; 
     border: 1px solid #e2e8f0;
     padding: 10px;
     background: #f8fafc;
     border-radius: 8px;
 }
 
-/* Personalización del scroll (finito y moderno) */
+/* Personalización del scroll */
 .scroll-categorias::-webkit-scrollbar {
     width: 6px;
 }
@@ -1335,11 +1326,11 @@ input {
 }
 
 .item-categoria:hover {
-    color: #2ecc71; /* Verde MundoNodo */
+    color: #2ecc71; 
 }
 
 .item-categoria input[type="checkbox"] {
-    accent-color: #2ecc71; /* Cambia el color del check a verde */
+    accent-color: #2ecc71; 
     width: 16px;
     height: 16px;
 }
@@ -1357,23 +1348,9 @@ input {
     border-color: #2ecc71;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 .category-scroll-container {
-    max-height: 250px; /* Altura máxima de la cajita */
-    overflow-y: auto;  /* Activa la barrita de scroll */
+    max-height: 250px; 
+    overflow-y: auto;  
     border: 1px solid #eee;
     border-radius: 5px;
     padding: 5px;
@@ -1382,7 +1359,7 @@ input {
 
 .category-item-row {
     display: flex;
-    justify-content: space-between; /* Nombre izquierda, Checkbox derecha */
+    justify-content: space-between; 
     align-items: center;
     padding: 8px 10px;
     cursor: pointer;
@@ -1390,23 +1367,15 @@ input {
 }
 
 .category-item-row:hover {
-    background-color: #orange; /* Verde clarito al pasar el ratón */
+    background-color: #orange; 
     color: #2ecc71;
 }
 
 .category-checkbox {
-    accent-color: #orange; /* Checkbox en color verde MundoNodo */
+    accent-color: #orange; 
     width: 16px;
     height: 16px;
 }
-
-
-
-
-
-
-
-
 
 /* Botón de filtrar estilo MundoNodo */
 .btn-aplicar-filtros {
@@ -1441,19 +1410,15 @@ input {
     font-size: 0.9em;
 }
 
-
-
 /* Grid específico para que los resultados se vean grandes */
 .product-grid-results {
     display: grid;
-    /* Ajusta el 300px si quieres que sean aún más grandes */
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); 
     gap: 25px;
     width: 100%;
     padding: 20px 0;
 }
 
-/* Aseguramos que la card ocupe todo el ancho de su columna del grid */
 .product-grid-results .card-wide {
     width: 100%;
     margin: 0;
@@ -1473,27 +1438,11 @@ input {
     grid-column: 1 / -1;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /* =========================================
-   CONTENEDOR DE RESULTADOS (GRID HORIZONTAL)
+   CONTENEDOR DE RESULTADOS 
    ========================================= */
 #grid-resultados.product-grid-compact {
     display: grid !important;
-    /* Forzamos 4 columnas que se reparten el 100% del ancho */
     grid-template-columns: repeat(4, 1fr) !important; 
     gap: 20px !important;
     width: 100% !important;
@@ -1501,7 +1450,6 @@ input {
     padding: 20px 0;
 }
 
-/* --- TARJETA ESTILO LANDING --- */
 .card-landing-style {
     background: #fff;
     border-radius: 12px;
@@ -1513,7 +1461,7 @@ input {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    height: 350px !important; /* Altura fija para que todas sean iguales */
+    height: 350px !important; 
     border: 1px solid #eee;
     box-sizing: border-box;
     width: 100% !important;
@@ -1522,7 +1470,7 @@ input {
 .card-landing-style:hover {
     transform: translateY(-8px);
     box-shadow: 0 12px 25px rgba(0,0,0,0.15);
-    border-color: #e67e22; /* El naranja de MundoNodo */
+    border-color: #e67e22; 
 }
 
 /* --- CONTENEDOR DE IMAGEN --- */
@@ -1544,7 +1492,7 @@ input {
 /* --- TEXTOS --- */
 .card-landing-style h3 {
     font-size: 0.9rem;
-    color: #2c3e50; /* Color oscuro profesional */
+    color: #2c3e50; 
     height: 2.4em;
     overflow: hidden;
     line-height: 1.2;
@@ -1578,14 +1526,6 @@ input {
         grid-template-columns: 1fr !important;
     }
 }
-
-
-
-
-
-
-
-
 
 /* Estilo extra para el modal de validación */
 #modal-carrito-vacio .modal-content {

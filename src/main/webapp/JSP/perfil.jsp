@@ -187,7 +187,7 @@
 
                 const pinguPath = "${pageContext.request.contextPath}/IMAGENES/avatar/pinguavatar.png";
 
-                // --- 1. PREVISUALIZACIÓN DUAL ---
+                // --- 1. PREVISUALIZACIÓN ---
                 if (avatarInput) {
                     avatarInput.addEventListener('change', function () {
                         const file = this.files[0];
@@ -205,7 +205,7 @@
                     });
                 }
 
-                // --- 2. CONTROL DE ERRORES GLOBAL ---
+                // --- 2. CONTROL DE ERRORES ---
                 [imgPreview, imgNavHeader].forEach(img => {
                     if (img) {
                         img.onerror = function () {

@@ -17,9 +17,25 @@ import mundonodo.model.dto.ItemCarrito;
 import mundonodo.model.dto.Usuario;
 import mundonodo.model.dto.Pedido;
 
+/**
+ * Servlet controlador encargado de finalizar la transacción de compra.
+ * Coordina la persistencia del pedido en la base de datos, gestiona la limpieza 
+ * del carrito de sesión y prepara la confirmación final de la factura para el cliente.
+ * * @author Jose Antonio
+ * @version 1.0
+ */
 @WebServlet(name = "ProcesarCompra", urlPatterns = {"/ProcesarCompra"})
 public class ProcesarCompra extends HttpServlet {
 
+    /**
+     * Procesa la petición POST para registrar el pedido de forma definitiva.
+     * Realiza validaciones de sesión, clona los datos del carrito para su visualización final,
+     * calcula importes e invoca la lógica de persistencia transaccional.
+     * * @param request  Objeto {@link HttpServletRequest} con la sesión y datos de compra.
+     * @param response Objeto {@link HttpServletResponse} para la navegación post-compra.
+     * @throws ServletException Si ocurre un error interno en el servidor.
+     * @throws IOException      Si ocurre un error en el flujo de entrada/salida.
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -28,36 +44,38 @@ public class ProcesarCompra extends HttpServlet {
         Usuario usuario = (Usuario) session.getAttribute("usuarioLogueado");
         List<ItemCarrito> carritoSesion = (List<ItemCarrito>) session.getAttribute("carrito");
 
-        // 1. Verificación de seguridad
+        // 1. Verificación de seguridad y estado: Solo procesa si hay usuario y productos.
         if (usuario != null && carritoSesion != null && !carritoSesion.isEmpty()) {
             
             DataSource ds = (DataSource) getServletContext().getAttribute("db_pool");
             DAOFactory factoria = DAOFactory.getDAOFactory();
             PedidoDAO pedidoDAO = factoria.getPedidoDao();
 
-            // 2. Clonamos el carrito para que la JSP tenga datos aunque borremos la sesión
+            // 2. Clonación de datos: Creamos una copia del carrito. 
             List<ItemCarrito> copiaCarrito = new ArrayList<>(carritoSesion);
 
-            // 3. Calculamos todos los importes necesarios para la factura
+            // 3.Recalcular importes finales para asegurar consistencia.
             double total = 0;
             for (ItemCarrito item : copiaCarrito) {
                 total += item.getProducto().getPrecio() * item.getCantidad();
             }
             
-            // Cálculos de impuestos (21% IVA)
+            // Cálculos de impuestos (IVA 21%)
             double baseImponible = total / 1.21;
             double ivaCalculado = total - baseImponible;
 
-            // 4. Persistencia en Base de Datos (Transacción)
+            // 4. Creación del objeto Pedido y llamada al DAO transaccional.
             Pedido p = new Pedido();
             p.setIdusuario(usuario.getIdusuario());
             p.setTotal(total);
 
+            // Se inserta cabecera y detalle en una sola transacción SQL.
             int idPedido = pedidoDAO.insertarPedidoCompleto(ds, p, copiaCarrito);
 
             if (idPedido != -1) {
                 
-                // Pasamos TODO al request. Estos atributos son los que leerá factura.jsp
+                // 5. Preparación de la vista de éxito: 
+                // Pasamos los datos al request para la renderización de la factura.
                 request.setAttribute("compraOk", true);
                 request.setAttribute("numPedido", idPedido);
                 request.setAttribute("totalFactura", total);
@@ -65,25 +83,32 @@ public class ProcesarCompra extends HttpServlet {
                 request.setAttribute("ivaCalculado", ivaCalculado);
                 request.setAttribute("carritoFinal", copiaCarrito); 
 
-                // 5. Ahora sí, limpiamos el carrito de la sesión
+                // 6. Gestión de Sesión: Limpieza del carrito tras la compra exitosa.
                 session.removeAttribute("carrito");
                 
-                // 6. Redirección interna (Forward) - Mantiene los atributos del request
+                // 7. Navegación: Forward a factura.jsp para mostrar el ticket final.
                 request.getRequestDispatcher("/JSP/factura.jsp").forward(request, response);
             } else {
-                // Si falla la BD, volvemos al carrito con aviso de error
+                // Gestión de fallos: Si la base de datos rechaza la transacción.
                 response.sendRedirect(request.getContextPath() + "/JSP/carrito.jsp?error=db");
             }
         } else {
-            // Si el usuario intenta procesar sin estar logueado o sin carrito
+            // Acceso denegado o sesión expirada.
             response.sendRedirect(request.getContextPath() + "/Inicio");
         }
     }
 
+    /**
+     * Gestiona las peticiones GET redirigiéndolas al carrito.
+     * Por seguridad, el proceso de compra no puede iniciarse mediante una URL directa (GET).
+     * * @param request  Objeto {@link HttpServletRequest}.
+     * @param response Objeto {@link HttpServletResponse}.
+     * @throws ServletException Si ocurre un error.
+     * @throws IOException      Si ocurre un error.
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // Por seguridad, si intentan acceder por URL, mandamos al carrito
         response.sendRedirect(request.getContextPath() + "/JSP/carrito.jsp");
     }
 }

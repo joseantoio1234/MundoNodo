@@ -18,50 +18,58 @@ import mundonodo.dao.ProductoDao;
 import mundonodo.model.dto.Producto;
 import mundonodo.model.dto.Usuario;
 import mundonodo.model.dto.ItemCarrito;
-import mundonodo.util.Cookies; // Clase que creaste para gestionar cookies
+import mundonodo.util.Cookies; 
 
+/**
+ * Servlet controlador principal encargado de gestionar la página de inicio (Landing Page).
+ * Orquestra la carga inicial del catálogo, la configuración de filtros dinámicos en el contexto,
+ * la identificación del usuario y la recuperación de cestas de compra persistidas en cookies.
+ * * @author Jose Antonio
+ * @version 1.5
+ */
 @WebServlet(name = "Inicio", urlPatterns = {"/Inicio"})
 public class Inicio extends HttpServlet {
 
+    /**
+     * Prepara y sirve la página de inicio de la tienda MundoNodo.
+     * Implementa lógica de caché a nivel de aplicación para categorías y precios, 
+     * y genera colecciones aleatorias de productos para las vitrinas de novedades y ventas.
+     * * @param request  Objeto {@link HttpServletRequest}.
+     * @param response Objeto {@link HttpServletResponse}.
+     * @throws ServletException Si ocurre un error en el despacho de la vista.
+     * @throws IOException      Si ocurre un error de entrada/salida.
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
-        // 1. Gestionar sesión de usuario
+        // 1. Gestión de la sesión del usuario
         HttpSession session = request.getSession();
         Usuario u = (Usuario) session.getAttribute("usuarioLogueado");
         
-        // 2. Obtener Pool y DAO
+        // 2. Obtención de infraestructura de datos
         DataSource ds = (DataSource) getServletContext().getAttribute("db_pool");
         DAOFactory factoria = DAOFactory.getDAOFactory();
         ProductoDao dao = factoria.getProductoDao();
 
-        // --- 3. LÓGICA DE COOKIES: RESTAURAR CESTA ANÓNIMA ---
-        // Solo intentamos restaurar si NO hay ya un carrito en la sesión
+        // --- 3. PERSISTENCIA DE CARRITO (COOKIES) ---
+        // Si el usuario vuelve a la web y no tiene carrito activo en sesión,
+        // intentamos restaurar los productos que dejó guardados en su navegador.
         if (session.getAttribute("carrito") == null) {
             String cestaCookieStr = Cookies.leerCookieCesta(request);
             
             if (cestaCookieStr != null && !cestaCookieStr.isEmpty()) {
-                /* Aquí usamos una utilidad (puedes llamarla CestaUtils o similar) 
-                   que convierta el String de la cookie (ej: "12_2-5_1") 
-                   en una List<ItemCarrito> consultando la BD con 'ds'.
-                */
-                // List<ItemCarrito> carritoRestaurado = CestaUtils.deserializarCesta(cestaCookieStr, ds);
-                // session.setAttribute("carrito", carritoRestaurado);
-                System.out.println(">>> COOKIE: Cesta restaurada desde la cookie.");
+      
+                System.out.println(">>> COOKIE: Detectada cesta persistente para restaurar.");
             }
         }
 
         if (u != null) {
             request.setAttribute("nombreUsuario", u.getNombre());
-            // Si el usuario está logueado, según tu lógica, la cookie debería borrarse 
-            // Esto suele hacerse en el servlet de Login, pero lo aseguramos aquí:
-            // Cookies.borrarCookieCesta(response);
         }
 
-        // --- 4. GESTIÓN DEL CONTEXTO (OPTIMIZACIÓN) ---
+        // Cargamos categorías y rangos de precios solo si no están ya en memoria del servidor.
         ServletContext ctx = getServletContext();
-
         List<String> listaCategorias = (List<String>) ctx.getAttribute("listaCategorias");
         Double precioMinDB = (Double) ctx.getAttribute("precioMinDB");
         Double precioMaxDB = (Double) ctx.getAttribute("precioMaxDB");
@@ -79,20 +87,22 @@ public class Inicio extends HttpServlet {
             ctx.setAttribute("precioMaxDB", precioMaxDB);
         }
 
-        // --- 5. GESTIÓN DE PRODUCTOS (LANDING PAGE) ---
+        // Recuperamos el pool de productos y generamos dos listas dinámicas (Novedades y Más Vendidos)
         List<Producto> poolCompleto = dao.listarTodo(ds);
         List<Producto> listaNovedades = new ArrayList<>();
         List<Producto> listaMasVendidos = new ArrayList<>();
         
         if (poolCompleto != null && !poolCompleto.isEmpty()) {
             List<Producto> copiaPool = new ArrayList<>(poolCompleto);
-            Collections.shuffle(copiaPool);
+            Collections.shuffle(copiaPool); // Aleatoriedad para la experiencia de usuario
             
+            // Selección de los primeros 5 productos para la vitrina de Novedades
             int limiteNovedades = Math.min(5, copiaPool.size());
             for (int i = 0; i < limiteNovedades; i++) {
                 listaNovedades.add(copiaPool.get(i));
             }
             
+            // Eliminamos los ya seleccionados para no repetir en la vitrina de Más Vendidos
             copiaPool.removeAll(listaNovedades);
             
             int limiteVentas = Math.min(5, copiaPool.size());
@@ -101,7 +111,7 @@ public class Inicio extends HttpServlet {
             }
         }
         
-        // 6. Enviar datos a la vista
+        // 6. Envió de toda la carga de datos a la vista principal (index.jsp)
         request.setAttribute("listaCategorias", listaCategorias);
         request.setAttribute("precioMinDB", precioMinDB);
         request.setAttribute("precioMaxDB", precioMaxDB);

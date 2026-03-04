@@ -8,8 +8,21 @@ import javax.sql.DataSource;
 import mundonodo.model.dto.Usuario;
 import mundonodo.model.mysql.Conexion;
 
+/**
+ * Clase Data Access Object (DAO) que gestiona la persistencia de los usuarios.
+ * Proporciona métodos para el registro, inicio de sesión, actualización de perfil
+ * y validaciones de existencia de datos en la base de datos de MundoNodo.
+ * * @author Jose Antonio
+ * @version 1.0
+ */
 public class UsuarioDao {
 
+    /**
+     * Registra un nuevo usuario en el sistema.
+     * * @param ds El {@link DataSource} para obtener la conexión del pool.
+     * @param u El objeto {@link Usuario} que contiene los datos a registrar.
+     * @return {@code true} si el registro fue exitoso, {@code false} en caso contrario.
+     */
     public boolean registrar(DataSource ds, Usuario u) {
         String sql = "INSERT INTO usuarios (email, password, nombre, apellidos, nif, telefono, direccion, codigo_postal, localidad, provincia, avatar) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection con = Conexion.getConexion(ds); 
@@ -32,6 +45,13 @@ public class UsuarioDao {
         }
     }
 
+    /**
+     * Valida las credenciales de un usuario para el inicio de sesión.
+     * * @param ds El {@link DataSource} para la conexión.
+     * @param correo El email introducido por el usuario.
+     * @param password La contraseña introducida.
+     * @return Un objeto {@link Usuario} poblado si las credenciales son válidas, {@code null} si no coinciden.
+     */
     public Usuario login(DataSource ds, String correo, String password) {
         Usuario u = null;
         String sql = "SELECT * FROM usuarios WHERE email = ? AND password = ?";
@@ -63,6 +83,12 @@ public class UsuarioDao {
         return u;
     }
 
+    /**
+     * Actualiza la información del perfil de un usuario existente.
+     * * @param ds El {@link DataSource} para la conexión.
+     * @param u El objeto {@link Usuario} con los datos actualizados.
+     * @return {@code true} si la actualización fue exitosa, {@code false} en caso contrario.
+     */
     public boolean actualizar(DataSource ds, Usuario u) {
         String sql = "UPDATE usuarios SET nombre=?, apellidos=?, telefono=?, direccion=?, "
                 + "localidad=?, provincia=?, codigo_postal=?, password=?, avatar=? WHERE idusuario=?";
@@ -85,6 +111,14 @@ public class UsuarioDao {
         }
     }
 
+    /**
+     * Verifica si un correo electrónico o un DNI ya están registrados en la base de datos.
+     * Se utiliza principalmente durante el proceso de registro para evitar duplicados.
+     * * @param ds El {@link DataSource} para la conexión.
+     * @param campo El nombre del campo a verificar ("correo" o "nif").
+     * @param valor El valor a buscar.
+     * @return {@code true} si el valor ya existe, {@code false} si está disponible.
+     */
     public boolean verificarExistencia(DataSource ds, String campo, String valor) {
         String columna = (campo.equalsIgnoreCase("correo") || campo.equalsIgnoreCase("email")) ? "email" : "nif";
         String sql = "SELECT COUNT(*) FROM usuarios WHERE LOWER(" + columna + ") = LOWER(?)";
@@ -103,6 +137,11 @@ public class UsuarioDao {
         return false;
     }
 
+    /**
+     * Actualiza la fecha y hora del último acceso del usuario a la fecha actual del sistema.
+     * * @param ds El {@link DataSource} para la conexión.
+     * @param idUsuario El identificador del usuario que ha iniciado sesión.
+     */
     public void actualizarUltimoAcceso(DataSource ds, int idUsuario) {
         String sql = "UPDATE usuarios SET ultimo_acceso = NOW() WHERE idusuario = ?";
         try (Connection con = Conexion.getConexion(ds); 
