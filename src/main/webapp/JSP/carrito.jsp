@@ -37,7 +37,7 @@
                             <a href="${pageContext.request.contextPath}/ActualizarPerfil" style="display: flex; align-items: center;">
                                 <c:choose>
                                     <c:when test="${not empty sessionScope.usuarioLogueado.avatar}">
-                                        <img src="${pageContext.request.contextPath}/IMAGENES/avatars/${sessionScope.usuarioLogueado.avatar}?t=${System.currentTimeMillis()}" 
+                                        <img src="${pageContext.request.contextPath}/IMAGENES/avatar/${sessionScope.usuarioLogueado.avatar}?t=${System.currentTimeMillis()}" 
                                              class="user-avatar-nav" alt="Avatar de ${sessionScope.usuarioLogueado.nombre}"
                                              onerror="this.src='${pageContext.request.contextPath}/IMAGENES/avatar/pinguavatar.png'">
                                     </c:when>

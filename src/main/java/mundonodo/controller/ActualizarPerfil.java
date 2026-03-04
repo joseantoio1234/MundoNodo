@@ -85,7 +85,7 @@ public class ActualizarPerfil extends HttpServlet {
                 Part filePart = request.getPart("fotoAvatar");
                 if (filePart != null && filePart.getSize() > 0) {
                     nombreImagen = System.currentTimeMillis() + "_" + filePart.getSubmittedFileName();
-                    String uploadPath = getServletContext().getRealPath("") + File.separator + "IMAGENES" + File.separator + "avatars";
+                    String uploadPath = getServletContext().getRealPath("") + File.separator + "IMAGENES" + File.separator + "avatar";
 
                     File uploadDir = new File(uploadPath);
                     if (!uploadDir.exists()) uploadDir.mkdirs();

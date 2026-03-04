@@ -45,11 +45,11 @@
 
                 <div class="user-nav-profile" style="display: flex; align-items: center; gap: 10px; margin-left: 10px;">
                     <div class="avatar-circle nav-avatar" style="width: 35px; height: 35px; border: 2px solid #e67e22; border-radius: 50%; overflow: hidden;">
-                        <img src="${pageContext.request.contextPath}/IMAGENES/avatars/${not empty sessionScope.usuarioLogueado.avatar ? sessionScope.usuarioLogueado.avatar : 'pinguavatar.png'}?t=${System.currentTimeMillis()}" 
+                        <img src="${pageContext.request.contextPath}/IMAGENES/avatar/${not empty sessionScope.usuarioLogueado.avatar ? sessionScope.usuarioLogueado.avatar : 'pinguavatar.png'}?t=${System.currentTimeMillis()}" 
                              alt="Avatar" 
                              class="user-avatar-nav"
                              style="width: 100%; height: 100%; object-fit: cover;"
-                             onerror="this.src='${pageContext.request.contextPath}/IMAGENES/avatars/pinguavatar.png';">
+                             onerror="this.src='${pageContext.request.contextPath}/IMAGENES/avatar/pinguavatar.png';">
                     </div>
                     <span style="color: white; font-size: 0.85rem;">
                         <strong> Hola ${sessionScope.usuarioLogueado.nombre}</strong>
@@ -79,9 +79,9 @@
                     <div class="auth-field" style="display: flex; align-items: center; gap: 20px; margin-bottom: 25px; background: #fdfdfd; padding: 15px; border-radius: 8px; border: 1px solid #eee;">
                         <div style="width: 100px; height: 100px; border-radius: 50%; overflow: hidden; border: 3px solid #e67e22; background: #eee; flex-shrink: 0;">
                             <img id="imgPreview" 
-                                 src="${pageContext.request.contextPath}/IMAGENES/avatars/${sessionScope.usuarioLogueado.avatar}" 
+                                 src="${pageContext.request.contextPath}/IMAGENES/avatar/${sessionScope.usuarioLogueado.avatar}" 
                                  style="width: 100%; height: 100%; object-fit: cover;"
-                                 onerror="this.src='${pageContext.request.contextPath}/IMAGENES/avatars/pinguavatar.png';">
+                                 onerror="this.src='${pageContext.request.contextPath}/IMAGENES/avatar/pinguavatar.png';">
                         </div>
                         <div style="flex: 1;">
                             <label style="display: block; margin-bottom: 8px;">Cambiar foto de perfil</label>

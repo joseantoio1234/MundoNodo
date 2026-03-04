@@ -11,10 +11,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
+
 import mundonodo.daofactory.DAOFactory;
 import mundonodo.dao.ProductoDao;
 import mundonodo.model.dto.ItemCarrito;
 import mundonodo.model.dto.Producto;
+// Importamos tus nuevas utilidades
+import mundonodo.util.Cookies;
+import mundonodo.util.CestaUtils;
 
 @WebServlet(name = "AnadirCarrito", urlPatterns = {"/AnadirCarrito"})
 public class AnadirCarrito extends HttpServlet {
@@ -59,7 +63,13 @@ public class AnadirCarrito extends HttpServlet {
                     carrito.add(new ItemCarrito(p, 1));
                 }
 
+                // 1. Guardar en Sesión (Memoria activa)
                 session.setAttribute("carrito", carrito);
+                
+                // --- 2. LÓGICA DE PERSISTENCIA (COOKIES) ---
+                // Convertimos el carrito a texto y lo guardamos por 2 días
+                String datosCesta = CestaUtils.serializarCesta(carrito);
+                Cookies.crearCookieCesta(response, datosCesta);
                 
                 // --- GESTIÓN DE RESPUESTA PARA AJAX ---
                 String requestedWith = request.getHeader("X-Requested-With");
@@ -69,15 +79,11 @@ public class AnadirCarrito extends HttpServlet {
                     response.setCharacterEncoding("UTF-8");
                     PrintWriter out = response.getWriter();
                     
-                    // Calculamos el total de unidades
                     int totalUnidades = calcularTotalItems(carrito);
-                    
-                    // Enviamos la cadena exacta que espera el JS
                     out.print("success|" + totalUnidades);
                     out.flush();
                     out.close(); 
                 } else {
-                    // Si no es AJAX, redirigimos a donde viniera el usuario
                     String referer = request.getHeader("Referer");
                     response.sendRedirect((referer != null) ? referer : request.getContextPath() + "/Inicio");
                 }
@@ -88,7 +94,6 @@ public class AnadirCarrito extends HttpServlet {
         }
     }
     
-    // Método para contar la suma de todas las cantidades 
     private int calcularTotalItems(List<ItemCarrito> carrito) {
         int total = 0;
         if (carrito != null) {

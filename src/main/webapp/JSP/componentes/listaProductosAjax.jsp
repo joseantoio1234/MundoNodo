@@ -1,5 +1,7 @@
+<%@page contentType="text/html" pageEncoding="UTF-8"%>ç
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
 
 <c:choose>
     <c:when test="${not empty listaFiltrada}">
@@ -12,7 +14,7 @@
                     <div>
                         <h3>${prod.nombre}</h3>
                         <p class="price-orange">
-                            <fmt:formatNumber value="${prod.precio}" type="number" minFractionDigits="2" maxFractionDigits="2" />?
+                            <fmt:formatNumber value="${prod.precio}" type="number" minFractionDigits="2" maxFractionDigits="2" />€
                         </p>
                     </div>
                 </div>
@@ -31,10 +33,10 @@
                                 <p class="modal-description">${prod.descripcion}</p>
                                 <div class="modal-footer-price">
                                     <span class="modal-price-val" style="color:#f39c12">
-                                        <fmt:formatNumber value="${prod.precio}" type="number" minFractionDigits="2" maxFractionDigits="2" />?
+                                        <fmt:formatNumber value="${prod.precio}" type="number" minFractionDigits="2" maxFractionDigits="2" />€
                                     </span>
                                     <a href="${pageContext.request.contextPath}/AnadirCarrito?id=${prod.idproducto}" class="btn-submit-auth">
-                                        <i class="fas fa-shopping-cart"></i> A�adir al carrito
+                                        <i class="fas fa-shopping-cart"></i> Añadir al carrito
                                     </a>
                                 </div>
                             </div>

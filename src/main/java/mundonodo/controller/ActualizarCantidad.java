@@ -10,7 +10,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
 import mundonodo.model.dto.ItemCarrito;
+// Importamos tus nuevas utilidades para la persistencia de la cesta
+import mundonodo.util.Cookies;
+import mundonodo.util.CestaUtils;
 
 @WebServlet(name = "ActualizarCantidad", urlPatterns = {"/ActualizarCantidad"})
 public class ActualizarCantidad extends HttpServlet {
@@ -63,14 +67,29 @@ public class ActualizarCantidad extends HttpServlet {
                         }
                     }
                     
+                    // Recalcular el total general tras la modificación
+                    int totalItemsHeader = 0;
                     for (ItemCarrito item : carrito) {
                         nuevoTotal += item.getProducto().getPrecio() * item.getCantidad();
+                        totalItemsHeader += item.getCantidad();
                     }
                     
+                    // 1. Actualizar la Sesión (Memoria del servidor)
                     session.setAttribute("carrito", carrito);
+
+                    // --- 2. LÓGICA DE PERSISTENCIA (COOKIES) ---
+                    if (carrito.isEmpty()) {
+                        // Si el carrito se quedó vacío tras eliminar, borramos la cookie
+                        Cookies.borrarCookieCesta(response);
+                    } else {
+                        // Si tiene productos, actualizamos la cookie con el nuevo estado (2 días)
+                        String datosCesta = CestaUtils.serializarCesta(carrito);
+                        Cookies.crearCookieCesta(response, datosCesta);
+                    }
                 }
             }
 
+            // Devolver respuesta JSON al cliente AJAX
             out.print("{");
             out.print("\"status\":\"success\",");
             out.print("\"nuevaQty\":" + nuevaCantidad + ",");

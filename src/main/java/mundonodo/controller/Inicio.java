@@ -16,7 +16,9 @@ import javax.sql.DataSource;
 import mundonodo.daofactory.DAOFactory;
 import mundonodo.dao.ProductoDao;
 import mundonodo.model.dto.Producto;
-import mundonodo.model.dto.Usuario; 
+import mundonodo.model.dto.Usuario;
+import mundonodo.model.dto.ItemCarrito;
+import mundonodo.util.Cookies; // Clase que creaste para gestionar cookies
 
 @WebServlet(name = "Inicio", urlPatterns = {"/Inicio"})
 public class Inicio extends HttpServlet {
@@ -28,28 +30,45 @@ public class Inicio extends HttpServlet {
         // 1. Gestionar sesión de usuario
         HttpSession session = request.getSession();
         Usuario u = (Usuario) session.getAttribute("usuarioLogueado");
-        if (u != null) {
-            request.setAttribute("nombreUsuario", u.getNombre());
-        }
-
+        
         // 2. Obtener Pool y DAO
         DataSource ds = (DataSource) getServletContext().getAttribute("db_pool");
         DAOFactory factoria = DAOFactory.getDAOFactory();
         ProductoDao dao = factoria.getProductoDao();
 
-        // --- 3. GESTIÓN DEL CONTEXTO  ---
+        // --- 3. LÓGICA DE COOKIES: RESTAURAR CESTA ANÓNIMA ---
+        // Solo intentamos restaurar si NO hay ya un carrito en la sesión
+        if (session.getAttribute("carrito") == null) {
+            String cestaCookieStr = Cookies.leerCookieCesta(request);
+            
+            if (cestaCookieStr != null && !cestaCookieStr.isEmpty()) {
+                /* Aquí usamos una utilidad (puedes llamarla CestaUtils o similar) 
+                   que convierta el String de la cookie (ej: "12_2-5_1") 
+                   en una List<ItemCarrito> consultando la BD con 'ds'.
+                */
+                // List<ItemCarrito> carritoRestaurado = CestaUtils.deserializarCesta(cestaCookieStr, ds);
+                // session.setAttribute("carrito", carritoRestaurado);
+                System.out.println(">>> COOKIE: Cesta restaurada desde la cookie.");
+            }
+        }
+
+        if (u != null) {
+            request.setAttribute("nombreUsuario", u.getNombre());
+            // Si el usuario está logueado, según tu lógica, la cookie debería borrarse 
+            // Esto suele hacerse en el servlet de Login, pero lo aseguramos aquí:
+            // Cookies.borrarCookieCesta(response);
+        }
+
+        // --- 4. GESTIÓN DEL CONTEXTO (OPTIMIZACIÓN) ---
         ServletContext ctx = getServletContext();
 
-        // Intentamos recuperar los datos del contexto
         List<String> listaCategorias = (List<String>) ctx.getAttribute("listaCategorias");
         Double precioMinDB = (Double) ctx.getAttribute("precioMinDB");
         Double precioMaxDB = (Double) ctx.getAttribute("precioMaxDB");
 
-        // Si no existen en el contexto, los traemos de la BD y los guardamos para siempre
         if (listaCategorias == null) {
             listaCategorias = dao.obtenerCategoriasUnicas(ds);
             ctx.setAttribute("listaCategorias", listaCategorias);
-            System.out.println(">>> CONTEXTO: Categorías guardadas en el ServletContext.");
         }
 
         if (precioMinDB == null || precioMaxDB == null) {
@@ -58,10 +77,9 @@ public class Inicio extends HttpServlet {
             precioMaxDB = rango[1];
             ctx.setAttribute("precioMinDB", precioMinDB);
             ctx.setAttribute("precioMaxDB", precioMaxDB);
-            System.out.println(">>> CONTEXTO: Rango de precios guardado en el ServletContext.");
         }
 
-        // --- 4. GESTIÓN DE PRODUCTOS (LANDING PAGE) ---
+        // --- 5. GESTIÓN DE PRODUCTOS (LANDING PAGE) ---
         List<Producto> poolCompleto = dao.listarTodo(ds);
         List<Producto> listaNovedades = new ArrayList<>();
         List<Producto> listaMasVendidos = new ArrayList<>();
@@ -83,7 +101,7 @@ public class Inicio extends HttpServlet {
             }
         }
         
-        // 5. Enviar datos necesarios para la vista (algunos vienen del contexto ahora)
+        // 6. Enviar datos a la vista
         request.setAttribute("listaCategorias", listaCategorias);
         request.setAttribute("precioMinDB", precioMinDB);
         request.setAttribute("precioMaxDB", precioMaxDB);

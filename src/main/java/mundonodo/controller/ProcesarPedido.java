@@ -8,13 +8,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.sql.DataSource;
 
-import mundonodo.daofactory.DAOFactory;
-import mundonodo.dao.PedidoDAO;
 import mundonodo.model.dto.ItemCarrito;
 import mundonodo.model.dto.Usuario;
-import mundonodo.model.dto.Pedido;
 
 @WebServlet(name = "ProcesarPedido", urlPatterns = {"/ProcesarPedido"})
 public class ProcesarPedido extends HttpServlet {
@@ -26,49 +22,39 @@ public class ProcesarPedido extends HttpServlet {
         HttpSession session = request.getSession();
         Usuario usuario = (Usuario) session.getAttribute("usuarioLogueado");
         List<ItemCarrito> carrito = (List<ItemCarrito>) session.getAttribute("carrito");
-        Pedido nuevoPedido = null;
 
-        // 1. Verificación de Seguridad
+        // 1. Verificación de Seguridad: Si no está logueado, mandamos a login
         if (usuario == null) {
-            session.setAttribute("redireccionPostLogin", "Carrito"); // Redirigir al Servlet del carrito, no al JSP
+            session.setAttribute("redireccionPostLogin", "Carrito"); 
             response.sendRedirect(request.getContextPath() + "/ValidarUsuario");
             return;
         }
 
-        // 2. Verificación de Contenido
+        // 2. Verificación de Contenido: Si el carrito está vacío, al inicio
         if (carrito == null || carrito.isEmpty()) {
             response.sendRedirect(request.getContextPath() + "/Inicio");
             return;
         }
 
         try {
-            // 3. OBTENER RECURSOS 
-            DataSource ds = (DataSource) getServletContext().getAttribute("db_pool");
-            DAOFactory factoria = DAOFactory.getDAOFactory();
-            PedidoDAO pedidoDao = factoria.getPedidoDao();
+            // 3. CÁLCULOS PARA LA VISTA PREVIA (Sin tocar la Base de Datos)
+            double total = calcularTotal(carrito);
+            double baseImponible = total / 1.21;
+            double ivaCalculado = total - baseImponible;
 
-            // 4. CREAR EL OBJETO PEDIDO
-            nuevoPedido = new Pedido();
-            nuevoPedido.setIdusuario(usuario.getIdusuario());
-            nuevoPedido.setTotal(calcularTotal(carrito));
+            // 4. PASAR DATOS AL REQUEST
+            // Estos atributos los usará factura.jsp para mostrar el resumen antes de confirmar
+            request.setAttribute("totalFactura", total);
+            request.setAttribute("baseImponible", baseImponible);
+            request.setAttribute("ivaCalculado", ivaCalculado);
+            request.setAttribute("modoPreview", true); // Para saber que aún no se ha confirmado
 
-            // 5. GUARDAR EN BD 
-            int idPedidoGenerado = pedidoDao.insertarPedidoCompleto(ds, nuevoPedido, carrito);
-
-            if (idPedidoGenerado > 0) {
-                // 6. Guardamos el ID en sesión para la factura y vaciamos carrito
-                nuevoPedido.setIdpedido(idPedidoGenerado);
-                
-                // Redirigimos a la vista final (Factura)
-                response.sendRedirect(request.getContextPath() + "/JSP/factura.jsp");
-            } else {
-                // Error en la inserción
-                response.sendRedirect(request.getContextPath() + "/Carrito?error=db");
-            }
+            // 5. REDIRIGIR A LA FACTURA (Usamos Forward para que los atributos lleguen)
+            request.getRequestDispatcher("/JSP/factura.jsp").forward(request, response);
 
         } catch (Exception e) {
             e.printStackTrace();
-            response.sendRedirect(request.getContextPath() + "/Carrito?error=exception");
+            response.sendRedirect(request.getContextPath() + "/JSP/carrito.jsp?error=exception");
         }
     }
 

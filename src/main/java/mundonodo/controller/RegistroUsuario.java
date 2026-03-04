@@ -2,8 +2,6 @@ package mundonodo.controller;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
@@ -39,20 +37,19 @@ public class RegistroUsuario extends HttpServlet {
             throws ServletException, IOException {
 
         request.setCharacterEncoding("UTF-8");
-        response.setContentType("text/plain");
-        response.setCharacterEncoding("UTF-8");
-        PrintWriter out = response.getWriter();
+        // Eliminamos el ContentType "text/plain" porque vamos a redirigir, no a escribir texto
 
         Usuario u = new Usuario();
         
         try {
-            // 1. OBTENER EL POOL DEL CONTEXTO
             DataSource ds = (DataSource) getServletContext().getAttribute("db_pool");
 
+            // Poblamos el objeto Usuario con los campos del formulario
             BeanUtils.populate(u, request.getParameterMap());
             
-            if(u.getCp() == null) {
-                u.setCp(request.getParameter("codigo_postal"));
+            // Corrección para el código postal si el nombre del input en el JSP es "cp"
+            if(u.getCp() == null || u.getCp().isEmpty()) {
+                u.setCp(request.getParameter("cp"));
             }
 
             // 2. Gestión de Avatar 
@@ -72,33 +69,33 @@ public class RegistroUsuario extends HttpServlet {
             }
             u.setAvatar(nombreImagen); 
 
-            // 3. USO DE FACTORY para obtener el DAO
             DAOFactory factoria = DAOFactory.getDAOFactory();
             UsuarioDao dao = factoria.getUsuarioDao();
 
-            // 4. Registrar y Login automático
+            // 3. Registrar y Login automático
             if (dao.registrar(ds, u)) {
+                // Obtenemos el usuario completo (con su ID generado) para la sesión
                 Usuario usuarioCompleto = dao.login(ds, u.getCorreo(), u.getPassword());
                 HttpSession session = request.getSession();
                 session.setAttribute("usuarioLogueado", usuarioCompleto);
                 
+                // 4. REDIRECCIÓN EN LUGAR DE PRINT
                 String redir = (String) session.getAttribute("redireccionPostLogin");
                 if (redir != null) {
-                    out.print(redir);
                     session.removeAttribute("redireccionPostLogin");
+                    response.sendRedirect(redir);
                 } else {
-                    out.print("success");
+                    // Si no hay redirección previa, vamos al Inicio
+                    response.sendRedirect(request.getContextPath() + "/Inicio");
                 }
             } else {
-                out.print("error_db");
+                // Si falla el registro, volvemos al formulario con un error
+                response.sendRedirect(request.getContextPath() + "/RegistroUsuario?error=db");
             }
 
         } catch (Exception e) {
             System.err.println("EXCEPCIÓN EN REGISTRO: " + e.getMessage());
-            out.print("exception");
-        } finally {
-            out.flush();
-            out.close();
+            response.sendRedirect(request.getContextPath() + "/RegistroUsuario?error=exception");
         }
     }
 }

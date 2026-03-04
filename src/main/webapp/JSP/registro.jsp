@@ -18,7 +18,7 @@
                 </a>
                 <h2 onclick="location.href = '${pageContext.request.contextPath}/Inicio'" style="cursor:pointer">MundoNodo</h2>
             </div>
-
+            
             <div class="header-center">
                 <form action="${pageContext.request.contextPath}/BusquedaServlet" method="GET" class="search-form">
                     <input type="text" name="query" placeholder="Buscar productos...">
@@ -67,28 +67,28 @@
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
                         <div class="auth-field">
                             <label>Nombre</label>
-                            <input type="text" name="nombre" required placeholder="Tu nombre">
+                            <input type="text" name="nombre" placeholder="Tu nombre">
                         </div>
                         <div class="auth-field">
                             <label>Apellidos</label>
-                            <input type="text" name="apellidos" required placeholder="Tus apellidos">
+                            <input type="text" name="apellidos"  placeholder="Tus apellidos">
                         </div>
                     </div>
 
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
                         <div class="auth-field">
                             <label>DNI / NIF</label>
-                            <input type="text" id="dni" name="dni" maxlength="9" required placeholder="12345678Z">
+                            <input type="text" id="dni" name="dni" maxlength="9"  placeholder="12345678Z">
                         </div>
                         <div class="auth-field">
                             <label>Teléfono</label>
-                            <input type="tel" name="telefono" placeholder="600000000" maxlength="9">
+                            <input type="tel" name="telefono" placeholder="Tiene que empezar por 6, 7 o 9" maxlength="9">
                         </div>
                     </div>
 
-                    <div class="auth-field">
+                    <div class="auth-field">    
                         <label>Correo Electrónico</label>
-                        <input type="email" name="correo" id="correo" required placeholder="ejemplo@correo.com">
+                        <input type="email" name="correo" id="correo" placeholder="ejemplo@correo.com">
                         <div id="emailFeedback" style="margin-top: 5px; font-size: 0.9rem; font-weight: bold; display: none;"></div>
                     </div>
 
@@ -98,21 +98,21 @@
 
                     <div class="auth-field">
                         <label>Dirección</label>
-                        <input type="text" name="direccion" id="direccion" required placeholder="Calle, número, piso...">
+                        <input type="text" name="direccion" id="direccion" placeholder="Calle, número, piso...">
                     </div>
 
                     <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px;">
                         <div class="auth-field">
                             <label>Localidad</label>
-                            <input type="text" name="localidad" id="localidad" required>
+                            <input type="text" name="localidad" id="localidad">
                         </div>
                         <div class="auth-field">
                             <label>Provincia</label>
-                            <input type="text" name="provincia" id="provincia" required>
+                            <input type="text" name="provincia" id="provincia">
                         </div>
                         <div class="auth-field">
                             <label>Código Postal</label>
-                            <input type="text" name="cp" id="cp" required placeholder="06800" maxlength="5">
+                            <input type="text" name="cp" id="cp" placeholder="06800" maxlength="5">
                         </div>
                     </div>
 
@@ -123,7 +123,7 @@
                     <div class="auth-field">
                         <label>Contraseña</label>
                         <div class="password-wrapper">
-                            <input type="password" id="pass1" name="password" required placeholder="Mínimo 8 caracteres">
+                            <input type="password" id="pass1" name="password" placeholder="Mínimo 8 caracteres">
                             <i class="fa-solid fa-eye toggle-password" onclick="togglePass('pass1', this)"></i>
                         </div>
                     </div>
@@ -131,7 +131,7 @@
                     <div class="auth-field">
                         <label>Confirmar Contraseña</label>
                         <div class="password-wrapper">
-                            <input type="password" id="pass2" required placeholder="Repite la contraseña">
+                            <input type="password" id="pass2" placeholder="Repite la contraseña">
                             <i class="fa-solid fa-eye toggle-password" onclick="togglePass('pass2', this)"></i>
                         </div>
                     </div>
