@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context path="/MundoNodo">
+  <Resource auth="Container" 
+            driverClassName="com.mysql.cj.jdbc.Driver" 
+            maxIdle="30" 
+            maxTotal="100" 
+            maxWaitMillis="10000" 
+            name="jdbc/mundo_nodo" 
+            password="mundoNodo2026*" 
+            type="javax.sql.DataSource" 
+            url="jdbc:mysql://localhost:3306/mundo_nodo"
+            username="nodo_admin"/>
+</Context>
