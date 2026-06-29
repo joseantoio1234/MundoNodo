@@ -1,0 +1,64 @@
+@startuml
+' --- CONFIGURACIÓN DE ESTILO ---
+skinparam classAttributeIconSize 0
+skinparam backgroundColor white
+skinparam roundcorner 10
+skinparam Shadowing true
+
+' --- CAPA DE CONTROLADORES (SERVLETS) ---
+package "mundonodo.controller" #E3F2FD {
+    class LoginServlet << (S,#FF7700) Servlet >>
+    class RegistroServlet << (S,#FF7700) Servlet >>
+    class CarritoServlet << (S,#FF7700) Servlet >>
+    class ProcesarCompra << (S,#FF7700) Servlet >>
+    class Inicio << (S,#FF7700) Servlet >>
+}
+
+' --- CAPA DE MODELO (DTO) ---
+package "mundonodo.model.dto" #F1F8E9 {
+    class Usuario {
+        - idusuario: int
+        - nombre: String
+        - email: String
+    }
+    class Producto {
+        - idproducto: int
+        - nombre: String
+        - precio: double
+    }
+    class ItemCarrito {
+        - producto: Producto
+        - cantidad: int
+        + getSubtotal(): double
+    }
+    class Pedido {
+        - idpedido: int
+        - fecha: Date
+        - total: double
+    }
+}
+
+' --- CAPA DE PERSISTENCIA (DAO) ---
+package "mundonodo.dao" #FFF3E0 {
+    interface UsuarioDao {
+        + validar(): Usuario
+        + registrar(): boolean
+    }
+    interface ProductoDao {
+        + listarTodos(): List
+    }
+    class MySQLUsuarioDAO
+    class MySQLProductoDAO
+}
+
+' --- RELACIONES ---
+MySQLUsuarioDAO ..|> UsuarioDao
+MySQLProductoDAO ..|> ProductoDao
+
+ItemCarrito o-- Producto : contiene
+Pedido *-- ItemCarrito : se compone de
+
+LoginServlet ..> UsuarioDao : usa
+Inicio ..> ProductoDao : usa
+ProcesarCompra ..> Pedido : crea
+@enduml
